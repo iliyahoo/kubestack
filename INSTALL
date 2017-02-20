@@ -1,0 +1,40 @@
+# prepare release binaries
+$ cd kubestack-release
+$ ./release kubestack-1.4.9-versions
+
+
+# check firewall rules
+
+$ gcloud compute networks subnets describe default
+gatewayAddress: 10.132.0.1
+ipCidrRange: 10.132.0.0/20
+kind: compute#subnetwork
+name: default
+network: https://www.googleapis.com/compute/v1/projects/kubernetes-13/global/networks/default
+region: https://www.googleapis.com/compute/v1/projects/kubernetes-13/regions/europe-west1
+
+$ gcloud compute firewall-rules list
+NAME                    NETWORK  SRC_RANGES     RULES   SRC_TAGS  TARGET_TAGS
+default-allow-internal  default  10.132.0.0/20  all
+default-allow-ssh       default  0.0.0.0/0      tcp:22
+
+# bake an image with binaries
+$ cd ../packer/
+$ packer build -var-file=settings.json kubestack.json
+
+# edit terraform.tfvars
+specify size of etcd cluster and execute
+    $ curl https://discovery.etcd.io/new?size=3
+copy-paste the exit into terraform.tfvars file
+
+
+$ cd ../terraform/
+$ terraform plan
+$ terraform apply
+
+# config kubectl
+$ kubectl config set-cluster kubestack --insecure-skip-tls-verify=true --server=https://104.199.67.162:6443
+$ kubectl config view
+
+# create nodes
+$ for i in {0..2}; do kubectl create -f "../kubectl_nodes/testing-kube${i}.c.kubernetes-13.internal.json"; done

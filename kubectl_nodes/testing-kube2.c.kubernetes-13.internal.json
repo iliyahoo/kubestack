@@ -1,0 +1,10 @@
+{
+  "kind": "Node",
+  "apiVersion": "v1",
+  "metadata": {
+    "name": "testing-kube2.c.kubernetes-13.internal"
+  },
+  "spec": {
+    "externalID": "testing-kube2.c.kubernetes-13.internal"
+  }
+}
