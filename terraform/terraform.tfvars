@@ -1,4 +1,4 @@
-account_file = "/home/iliya/.ssh/kubestack-account.json"
+account_file = "~/.ssh/kubestack-account.json"
 flannel_backend = "vxlan"
 flannel_network = "10.10.0.0/16"
 image = "kubestack-1-4-9"
