@@ -41,7 +41,7 @@ resource "google_compute_firewall" "kubernetes-api" {
 }
 
 resource "google_compute_instance" "etcd" {
-    count = 3
+    count = 1
 
     name = "${var.cluster_name}-etcd${count.index}"
     machine_type = "n1-standard-1"
@@ -172,6 +172,10 @@ resource "google_compute_instance" "kube" {
 
     metadata {
         "sshKeys" = "${var.sshkey_metadata}"
+    }
+
+    service_account {
+      scopes = ["storage-ro"]
     }
 
     provisioner "remote-exec" {
